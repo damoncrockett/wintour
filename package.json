@@ -1,0 +1,23 @@
+{
+  "name": "wintour",
+  "version": "1.0.0",
+  "description": "Iconographic Visualization of Predictive Models",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damoncrockett/wintour.git"
+  },
+  "author": "Damon Crockett",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/damoncrockett/wintour/issues"
+  },
+  "homepage": "https://github.com/damoncrockett/wintour#readme",
+  "devDependencies": {
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
+  }
+}
