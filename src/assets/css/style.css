@@ -1,0 +1,15 @@
+#panel {
+	width: 200px;
+    height: 500px;
+    background-color: #646464;
+    display: inline-block;
+    float: right;
+    position: fixed;
+    right: 0;
+    font-family: "Arial";
+    color: #ffffff;
+}
+
+rect:hover {
+	fill: #ff8800;
+}
