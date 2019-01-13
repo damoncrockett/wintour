@@ -19,5 +19,8 @@
   "devDependencies": {
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1"
+  },
+  "dependencies": {
+    "d3-fetch": "^1.1.2"
   }
 }
