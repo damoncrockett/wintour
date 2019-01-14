@@ -86,7 +86,7 @@ X = X.join(imp,on="officer_id")
 
 # In[116]:
 
-
+#X['score'] = X.score.rank(pct=True)
 X.score = X.score.round(2)
 X[feature] = X[feature].round(2)
 
