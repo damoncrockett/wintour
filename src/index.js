@@ -5,27 +5,28 @@ const rectSide = 10;
 const rectPad = 1;
 const histWidth = 1000 + rectPad * 2;
 const histHeight = 5000;
+const bgcolor = '#ffffff';
 
 json("src/assets/data/json/data.json").then( data => {
-  var svg = select("body")
-              .append("svg")
-              .attr("width", histWidth)
-              .attr("height", histHeight);
+  var svg = select('body')
+              .append('svg')
+              .attr('width', histWidth)
+              .attr('height', histHeight);
 
-  svg.selectAll("rect")
+  svg.selectAll('rect')
      .data(data)
      .enter()
-     .append("rect")
-     .attr("width", rectSide)
-     .attr("height", rectSide)
-     .attr("stroke", "#646464")
-     .attr("fill", function(d) {
+     .append('rect')
+     .attr('width', rectSide)
+     .attr('height', rectSide)
+     .attr('stroke', '#646464')
+     .attr('fill', function(d) {
           return 'hsl(0,0%,'+String(parseInt((1-d.score)*100))+'%)';
         })
-     .attr("x", function(d) {
+     .attr('x', function(d) {
           return d.x * rectSide + rectPad;
         })
-     .attr("y", function(d) {
+     .attr('y', function(d) {
           return histHeight - d.y * rectSide - rectSide - rectPad;
         });
 

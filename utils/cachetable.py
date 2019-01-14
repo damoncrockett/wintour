@@ -44,7 +44,7 @@ imp = pd.read_csv(IMP)
 
 ft.sort_values(by="feature_importance",ascending=False,inplace=True)
 feature = ft.feature.iloc[featnum]
-
+print(feature)
 
 # In[112]:
 
@@ -148,7 +148,7 @@ for i in X.index:
 
 # In[123]:
 
-
+print("generating JSON file...",end="",flush=True)
 with open(JSONDIR+"data.json",'w') as outfile:
     json.dump(jsonArray,outfile)
-
+print("[DONE]")
