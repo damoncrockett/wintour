@@ -12,11 +12,12 @@ module.exports = {
   },
   output: {
     path: paths.dist,
-    filename: 'bundle.js',
+    filename: 'bundle.js', //needs to match script tag in index.html
     publicPath: '/', //webpack content served from
   },
 
   devServer: {
+    //index.html needs to be in contentBase
     contentBase: __dirname, //content not from webpack served from
     compress: true,
     port: 8080,
