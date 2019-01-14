@@ -5,4 +5,4 @@ utils/notebooks
 utils/scripts
 utils/data
 *.ipynb
-src/assets/data
+src/assets/data/**
