@@ -9,9 +9,9 @@ const bgcolor = '#ffffff';
 
 json("src/assets/data/json/data.json").then( data => {
   var svg = select('body')
-              .append('svg')
-              .attr('width', histWidth)
-              .attr('height', histHeight);
+            .append('svg')
+            .attr('width', histWidth)
+            .attr('height', histHeight);
 
   svg.selectAll('rect')
      .data(data)
