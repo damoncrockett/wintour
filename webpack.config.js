@@ -12,12 +12,13 @@ module.exports = {
     extensions: ['.js', '.jsx', ],
   },
   output: {
-    path: paths.dist,
+    path: paths.dist, //yarn build will create this dir if it doesn't exist
     filename: 'bundle.js',
+    publicPath: '/' //where WDS serves bundle.js and index.html from
   },
 
   devServer: {
-    contentBase: paths.dist, //where webpack puts new index.html
+    contentBase: paths.dist, //not sure what this does wrt HtmlWebpackPlugin
     compress: true,
     port: 8080,
     stats: 'errors-only',
