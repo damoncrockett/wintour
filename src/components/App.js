@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Histogram from './Histogram';
+import RiskToggle from './RiskToggle';
 import jsonData from '../assets/data/json/data.json';
 
 class App extends Component {
@@ -7,6 +8,7 @@ class App extends Component {
         return (
             <div>
                 <Histogram data={jsonData}/>
+                <RiskToggle />
             </div>
         );
     }
