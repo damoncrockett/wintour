@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { select } from 'd3-selection';
-import { score2hsl } from './HSL';
+import { togglesToColor } from '../lib/color';
 
 const rectSide = 10;
 const rectPad = 1;
@@ -33,9 +33,14 @@ class Histogram extends Component {
        .attr('width', rectSide)
        .attr('height', rectSide)
        .attr('stroke', '#646464')
-       .attr('fill', d => (this.props.isToggleOn) ? score2hsl(d.score): score2hsl(0.5))
        .attr('x', d => d.x * rectSide + rectPad)
-       .attr('y', d => histH - d.y * rectSide - rectSide - rectPad);
+       .attr('y', d => histH - d.y * rectSide - rectSide - rectPad)
+       .attr('fill', d => (
+         togglesToColor(
+           this.props.impToggle ? d.imp : null,
+           this.props.riskToggle ? d.score : null
+         )
+       ));
 
     window.scrollTo( 0, histH ); // to keep equator in same visual spot
   }

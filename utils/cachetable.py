@@ -25,7 +25,7 @@ featnum = int(sys.argv[1])
 # In[109]:
 
 
-DIR = "/Users/damoncrockett/wintour/utils/data/"
+DIR = "/Users/dc987/wintour/utils/data/"
 MATRIX = DIR + "193398_test_2014-04-01.csv"
 FEATTABLE = DIR + "193398_feattable.csv"
 IMP = DIR + "193398_individual_importances.csv"
@@ -86,7 +86,7 @@ X = X.join(imp,on="officer_id")
 
 # In[116]:
 
-#X['score'] = X.score.rank(pct=True)
+X['score'] = X.score.rank(pct=True)
 X.score = X.score.round(2)
 X[feature] = X[feature].round(2)
 
@@ -112,7 +112,7 @@ X['ypos'] = ypos
 # In[119]:
 
 
-DATADIR = "/Users/damoncrockett/wintour/src/assets/data/"
+DATADIR = "/Users/dc987/wintour/src/assets/data/"
 JSONDIR = DATADIR + "json/"
 
 

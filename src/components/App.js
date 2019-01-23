@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import RiskToggle from './RiskToggle';
+import Plotter from './Plotter';
 
 class App extends Component {
   render() {
     return (
-      <RiskToggle />
+      <Plotter />
     );
   }
 }
