@@ -130,7 +130,7 @@ def row2jso(i):
     jso = {}
     jso['id'] = str(int(row.officer_id))
     jso['outcome'] = str(int(row.outcome))
-    jso['score'] = row.score
+    jso['score'] = str(row.score)
     jso['imp'] = str(int(row.imp))
     jso['x'] = str(int(row.xbin))
     jso['y'] = str(int(row.ypos))

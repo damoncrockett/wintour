@@ -35,6 +35,7 @@ class Histogram extends Component {
        .attr('stroke', '#646464')
        .attr('x', d => d.x * rectSide + rectPad)
        .attr('y', d => histH - d.y * rectSide - rectSide - rectPad)
+       .attr('title', d => d.id)
        .attr('fill', d => (
          togglesToColor(
            this.props.impToggle ? d.imp : null,

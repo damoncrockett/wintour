@@ -1,5 +1,7 @@
+//n.b.: string values for imp and risk are coerced to numeric
+
 function togglesToColor (impVal, riskVal) {
-  const hue = impVal ? String(impVal * 120) : '0'; // assumes 0/1 imp coding
+  const hue = impVal ? String(120 * impVal) : '0';
   const sat = hue==='0' ? '0' : '50';
   const lig = riskVal ? String(parseInt((1-riskVal) * 100)) : '50';
 
