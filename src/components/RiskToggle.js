@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
+import Histogram from './Histogram';
+import jsonData from '../assets/data/json/data.json';
 
 class RiskToggle extends React.Component {
   constructor(props) {
     super(props);
     this.state = {isToggleOn: true};
-    // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
-    this.setState(state => ({ //functional setState
+    this.setState(state => ({
       isToggleOn: !state.isToggleOn
     }));
   }
 
   render() {
+    const isToggleOn = this.state.isToggleOn;
     return (
-      <button onClick={this.handleClick}>
-        {this.state.isToggleOn ? 'RISK ON' : 'RISK OFF'}
-      </button>
+      <div>
+        <Histogram
+          data={jsonData}
+          isToggleOn={isToggleOn} />
+        <button onClick={this.handleClick}>
+          {isToggleOn ? 'RISK ON' : 'RISK OFF'}
+        </button>
+      </div>
     );
   }
 }

@@ -33,7 +33,7 @@ class Histogram extends Component {
        .attr('width', rectSide)
        .attr('height', rectSide)
        .attr('stroke', '#646464')
-       .attr('fill', d => score2hsl(d.score))
+       .attr('fill', d => (this.props.isToggleOn) ? score2hsl(d.score): score2hsl(0.5))
        .attr('x', d => d.x * rectSide + rectPad)
        .attr('y', d => histH - d.y * rectSide - rectSide - rectPad);
 
