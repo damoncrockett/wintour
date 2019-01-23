@@ -17,3 +17,5 @@ I'm building this app in stages, as I learn. The app is essentially fully design
 ###### 10: highlighting individuals on the lift-pull
 ###### 11: response view in a wholly new tab
 ###### 12: table view in another new tab
+###### 13: styling
+###### 14: transitions
