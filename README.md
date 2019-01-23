@@ -13,9 +13,13 @@ I'm building this app in stages, as I learn. The app is essentially fully design
 ###### 6: axis labels (observe margin convention, 'g' element)
 ###### 7: all histograms, new nav controls
 ###### 8: individual view on separate 'zoom' pane, on hover
-###### 9: switch between lift-pull (from training set) and active view (requires up-down hist)
+
+### New Tabs
+###### 9: lift-pull, both single and small multiples
 ###### 10: highlighting individuals on the lift-pull
-###### 11: response view in a wholly new tab
-###### 12: table view in another new tab
+###### 11: response view
+###### 12: table view
+
+### Polish
 ###### 13: styling
 ###### 14: transitions
