@@ -1,6 +1,3 @@
-# wintour
-Interactive Tool for Explaining Predictive Models
-
 # Stages
 
 I'm building this app in stages, as I learn. The app is essentially fully designed and implemented in static form using Python. I've done very little in the way of interactive graphics, and I think this project is a good way to learn. 
