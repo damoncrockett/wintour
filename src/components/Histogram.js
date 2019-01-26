@@ -14,10 +14,6 @@ class Histogram extends Component {
     this.histRef = React.createRef();
   }
 
-  componentDidMount() {
-    this.drawHistogram()
-  }
-
   componentDidUpdate() {
     this.drawHistogram()
   }
