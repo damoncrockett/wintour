@@ -11,38 +11,48 @@ class Histogram extends Component {
   constructor(props) {
     super(props);
     this.drawHistogram = this.drawHistogram.bind(this);
-    this.histRef = React.createRef();
   }
 
   componentDidUpdate() {
-    this.drawHistogram()
+    this.drawHistogram();
   }
 
   drawHistogram() {
-    const plot = select(this.histRef.current);
+    const node = this.node;
 
-    plot
-       .selectAll() //I'm not understanding why this is necessary
-       .data(this.props.data)
-       .enter()
-       .append('rect')
-       .attr('width', rectSide)
-       .attr('height', rectSide)
-       .attr('stroke', '#646464')
-       .attr('x', d => d.x * rectSide + rectPad)
-       .attr('y', d => histH - d.y * rectSide - rectSide - rectPad)
-       .attr('fill', d => (
-         togglesToColor(
-           this.props.impToggle ? d.imp : null,
-           this.props.riskToggle ? d.score : null
-         )
-       ));
+    select(node)
+      .selectAll('rect')
+      .data(this.props.data)
+      .enter()
+      .append('rect');
+
+    // I don't get why this works; they were entered on prevProps
+    select(node)
+      .selectAll('rect')
+      .data(this.props.data)
+      .exit()
+      .remove();
+
+    select(node)
+      .selectAll('rect')
+      .data(this.props.data)
+      .attr('width', rectSide)
+      .attr('height', rectSide)
+      .attr('stroke', '#646464')
+      .attr('x', d => d.x * rectSide + rectPad)
+      .attr('y', d => histH - d.y * rectSide - rectSide - rectPad)
+      .attr('fill', d => (
+        togglesToColor(
+          this.props.impToggle ? d.imp : null,
+          this.props.riskToggle ? d.score : null
+        )
+      ));
 
     window.scrollTo( 0, histH ); // to keep equator in same visual spot
   }
 
   render() {
-    return <svg ref={this.histRef} width={histW} height={histH} />;
+    return <svg ref={node => this.node = node} width={histW} height={histH} />;
   }
 }
 
