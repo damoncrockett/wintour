@@ -1,46 +1,68 @@
 import React, { Component } from 'react';
 import { select } from 'd3-selection';
+import { max } from 'd3-array';
 import { togglesToColor } from '../lib/color';
 
 const rectSide = 10;
 const rectPad = 1;
 const histW = 1000 + rectPad * 2;
-const histH = 5000;
 
 class Histogram extends Component {
   constructor(props) {
     super(props);
     this.drawHistogram = this.drawHistogram.bind(this);
+    this.setHistHeight = this.setHistHeight.bind(this);
+    this.svgNode = React.createRef();
+    this.state = {histH: null};
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
+    // conditional prevents infinite loop
+    if (prevProps.data !== this.props.data) {
+      this.setHistHeight();
+    }
+    // has to be outside conditional because buttons don't change props.data
     this.drawHistogram();
   }
 
-  drawHistogram() {
-    const node = this.node;
+  setHistHeight () {
+    this.setState(state => ({
+      histH: max(this.props.data.map(d => d.y * rectSide + rectSide + rectPad))
+    }));
+  }
 
-    select(node)
+  drawHistogram() {
+    const svgNode = this.svgNode.current;
+
+    // This selection is non-empty only the first time
+    select(svgNode)
       .selectAll('rect')
       .data(this.props.data)
       .enter()
-      .append('rect');
+      .append('rect')
+      .attr('width', rectSide)
+      .attr('height', rectSide)
+      .attr('stroke', '#646464');
 
-    // I don't get why this works; they were entered on prevProps
-    select(node)
+/*
+    My data is always the same length, but I leave
+    the exit selection below for formal reasons.
+    And it may eventually be necessary.
+*/
+
+/*
+    select(svgNode)
       .selectAll('rect')
       .data(this.props.data)
       .exit()
       .remove();
+*/
 
-    select(node)
+    select(svgNode)
       .selectAll('rect')
       .data(this.props.data)
-      .attr('width', rectSide)
-      .attr('height', rectSide)
-      .attr('stroke', '#646464')
       .attr('x', d => d.x * rectSide + rectPad)
-      .attr('y', d => histH - d.y * rectSide - rectSide - rectPad)
+      .attr('y', d => this.state.histH - d.y * rectSide - rectSide - rectPad)
       .attr('fill', d => (
         togglesToColor(
           this.props.impToggle ? d.imp : null,
@@ -48,11 +70,11 @@ class Histogram extends Component {
         )
       ));
 
-    window.scrollTo( 0, histH ); // to keep equator in same visual spot
+    window.scrollTo( 0, this.state.histH ); // keep equator in same visual spot
   }
 
   render() {
-    return <svg ref={node => this.node = node} width={histW} height={histH} />;
+    return <svg ref={this.svgNode} width={histW} height={this.state.histH} />;
   }
 }
 

@@ -8,4 +8,17 @@ function togglesToColor (impVal, riskVal) {
   return 'hsl('+hue+','+sat+'%,'+lig+'%)';
 }
 
-export { togglesToColor };
+function randomChannel () {
+  const popArray = Array.from(Array(256).keys());
+  return Math.floor(Math.random() * popArray.length);
+}
+
+function randomRGB () {
+  return [
+    randomChannel(),
+    randomChannel(),
+    randomChannel(),
+  ];
+}
+
+export { togglesToColor, randomRGB };

@@ -38,7 +38,9 @@ class Plotter extends React.Component {
     if (validFilenames.includes(this.state.n)) {
       fetch('http://localhost:8888/'+this.state.n+'.json')
         .then(response => response.json())
-        .then(data => this.setState({ data }));
+        .then(data => this.setState(state => ({
+          data: data // functional setState maybe overkill here
+        })));
     }
   }
 
