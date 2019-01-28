@@ -42,7 +42,8 @@ class Histogram extends Component {
       .append('rect')
       .attr('width', rectSide)
       .attr('height', rectSide)
-      .attr('stroke', '#646464');
+      .attr('rx', '1.5')
+      .attr('ry', '1.5');
 
 /*
     My data is always the same length, but I leave

@@ -1,8 +1,15 @@
-h1 {
-	color: #646464;
-	font-family: monospace;
-}
-
 rect:hover {
 	fill: #ff8800;
+}
+
+body {
+	background-color: hsl(0, 0%, 15%);
+}
+
+fieldset {
+	color: hsl(0, 0%, 75%);
+	font-family: monospace;
+	position: fixed;
+	bottom: 0px;
+	left: 1150px;
 }
