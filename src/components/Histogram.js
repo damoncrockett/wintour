@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { select } from 'd3-selection';
 import { max } from 'd3-array';
-import { togglesToColor } from '../lib/color';
+import { togglesToFill, togglesToStroke } from '../lib/color';
 
 const rectSide = 10;
 const rectPad = 1;
@@ -63,8 +63,13 @@ class Histogram extends Component {
       .data(this.props.data)
       .attr('x', d => d.x * rectSide + rectPad)
       .attr('y', d => this.state.histH - d.y * rectSide - rectSide - rectPad)
+      .attr('stroke', d => (
+        togglesToStroke(
+          this.props.impToggle ? d.imp : null,
+        )
+      ))
       .attr('fill', d => (
-        togglesToColor(
+        togglesToFill(
           this.props.impToggle ? d.imp : null,
           this.props.riskToggle ? d.score : null
         )
