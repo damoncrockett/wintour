@@ -45,6 +45,13 @@ class Histogram extends Component {
       .attr('rx', '1.5')
       .attr('ry', '1.5');
 
+    select(svgNode)
+      .selectAll('text')
+      .data(this.props.data)
+      .enter()
+      .append('text')
+      .classed('rectLabel', true);
+
 /*
     My data is always the same length, but I leave
     the exit selection below for formal reasons.
@@ -75,6 +82,15 @@ class Histogram extends Component {
           this.props.riskToggle ? d.score : null
         )
       ));
+
+    select(svgNode)
+      .selectAll('text')
+      .data(this.props.data)
+      .attr('x', d => d.x * rectSide + rectPad)
+      .attr('y', d => this.state.histH - d.y * rectSide - rectSide - rectPad)
+      .text(d => d.id)
+      .attr('dy', '6px')
+      .attr('dx', '1px');
 
     window.scrollTo( 0, this.state.histH ); // keep equator in same visual spot
   }

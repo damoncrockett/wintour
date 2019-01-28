@@ -9,7 +9,10 @@ body {
 fieldset {
 	color: hsl(0, 0%, 75%);
 	font-family: monospace;
-	position: fixed;
-	bottom: 0px;
-	left: 1150px;
+}
+
+.rectLabel {
+	fill: hsl(0, 0%, 15%);
+	font-family: monospace;
+	font-size: 3.25px;
 }
