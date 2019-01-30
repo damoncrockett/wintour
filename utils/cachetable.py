@@ -21,24 +21,20 @@ imp = pd.read_csv(IMP)
 print("[DONE]")
 
 ft.sort_values(by="feature_importance",ascending=False,inplace=True)
+num_feats = len(ft)
 
-def row2jso(X,i):
+def row2jso(X,i,feature):
     row = X.loc[i]
     jso = {}
     jso['id'] = str(int(row.officer_id))
     jso['outcome'] = str(int(row.outcome))
     jso['score'] = str(row.score)
     jso['imp'] = str(int(row.imp))
-    jso['x'] = str(int(row.xbin))
-    jso['y'] = str(int(row.ypos))
+    jso['featVal'] = row[feature]
 
     return jso
 
-def create_table(ft,X,imp,featnum):
-
-    feature = ft.feature.iloc[featnum]
-    print(feature,'\n')
-
+def get_imp(feature,imp):
     print("generating JSON file...",end="",flush=True)
 
     imp['impfeats'] = [[imp.risk_1.loc[l],
@@ -60,26 +56,28 @@ def create_table(ft,X,imp,featnum):
     imp.rename(columns={"entity_id":"officer_id"},inplace=True)
     imp.set_index("officer_id",inplace=True)
 
-    X = X[['officer_id','outcome','score',feature]]
-    X = X.join(imp,on="officer_id")
+    return imp
 
+def subset_X(X,feature):
+    X = X[['officer_id','outcome','score',feature]]
     X['score'] = X.score.rank(pct=True)
     X.score = X.score.round(2)
     X[feature] = X[feature].round(2)
 
-    X['xbin'] = pd.cut(X[feature],100,labels=False)
-    X.sort_values(by=['xbin','score'],ascending=[True,False],inplace=True)
+    return X
 
-    ypos = []
-    for xbin in range(X.xbin.max()+1):
-        n = len(X[X.xbin==xbin])
-        ypos.append(list(range(n)))
-    ypos = [item for sublist in ypos for item in sublist]
-    X['ypos'] = ypos
+def create_table(ft,X,imp,featnum):
+
+    feature = ft.feature.iloc[featnum]
+    print(str(featnum),'of',str(num_feats),'\n',feature,'\n')
+
+    imp = get_imp(feature,imp)
+    X = subset_X(X,feature)
+    X = X.join(imp,on="officer_id")
 
     jsonArray = []
     for i in X.index:
-        jso = row2jso(X,i)
+        jso = row2jso(X,i,feature)
         jsonArray.append(jso)
 
     JSONDIR = HOME + "wintour/src/assets/json/"
@@ -87,5 +85,5 @@ def create_table(ft,X,imp,featnum):
         json.dump(jsonArray,outfile)
     print("[DONE]")
 
-for j in range(len(ft)):
-    create_table(ft,X,imp,j)
+for j in range(num_feats):
+    create_table(ft,X,imp,num_feats)
