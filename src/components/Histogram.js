@@ -1,33 +1,46 @@
 import React, { Component } from 'react';
 import { select } from 'd3-selection';
-import { max } from 'd3-array';
+import { min, max } from 'd3-array';
 import { togglesToFill, togglesToStroke } from '../lib/color';
-
-const rectSide = 10;
-const rectPad = 1;
-const histW = 1000 + rectPad * 2;
 
 class Histogram extends Component {
   constructor(props) {
     super(props);
     this.drawHistogram = this.drawHistogram.bind(this);
-    this.setHistHeight = this.setHistHeight.bind(this);
+    this.setRectAttr = this.setRectAttr.bind(this);
     this.svgNode = React.createRef();
-    this.state = {histH: null};
+    this.state = {
+      histH: null,
+      histW: null,
+      rectSide: null,
+      rectPad: null,
+    };
   }
 
   componentDidUpdate(prevProps, prevState) {
     // conditional prevents infinite loop
     if (prevProps.data !== this.props.data) {
-      this.setHistHeight();
+      this.setRectAttr();
     }
     // has to be outside conditional because buttons don't change props.data
     this.drawHistogram();
   }
 
-  setHistHeight () {
+  setRectAttr() {
+    const binMin = min(this.props.data.map(d => d.x));
+    const binMax = max(this.props.data.map(d => d.x));
+    const bins = binMax - binMin + 1;
+    const baseWidth = 1000; //hard-code based on common screen resolutions
+    const rectSide = baseWidth / bins;
+    const rectPad = rectSide * 0.1;
+
     this.setState(state => ({
-      histH: max(this.props.data.map(d => d.y * rectSide + rectSide + rectPad))
+      rectSide: rectSide,
+      rectPad: rectPad,
+      histW: (rectSide + rectPad) * bins,
+      histH: max(this.props.data.map(d => (
+        d.y * rectSide + rectSide + rectPad
+      )))
     }));
   }
 
@@ -39,18 +52,7 @@ class Histogram extends Component {
       .selectAll('rect')
       .data(this.props.data)
       .enter()
-      .append('rect')
-      .attr('width', rectSide)
-      .attr('height', rectSide)
-      .attr('rx', '1.5')
-      .attr('ry', '1.5');
-
-    select(svgNode)
-      .selectAll('text')
-      .data(this.props.data)
-      .enter()
-      .append('text')
-      .classed('rectLabel', true);
+      .append('rect');
 
 /*
     My data is always the same length, but I leave
@@ -69,8 +71,17 @@ class Histogram extends Component {
     select(svgNode)
       .selectAll('rect')
       .data(this.props.data)
-      .attr('x', d => d.x * rectSide + rectPad)
-      .attr('y', d => this.state.histH - d.y * rectSide - rectSide - rectPad)
+      .attr('width', this.state.rectSide)
+      .attr('height', this.state.rectSide)
+      .attr('rx', String(this.state.rectSide * .15))
+      .attr('ry', String(this.state.rectSide * .15))
+      .attr('x', d => d.x * this.state.rectSide + this.state.rectPad)
+      .attr('y', d => (
+        this.state.histH -
+        d.y * this.state.rectSide -
+        this.state.rectSide -
+        this.state.rectPad
+      ))
       .attr('stroke', d => (
         togglesToStroke(
           this.props.impToggle ? d.imp : null,
@@ -81,22 +92,16 @@ class Histogram extends Component {
           this.props.impToggle ? d.imp : null,
           this.props.riskToggle ? d.score : null
         )
-      ));
-
-    select(svgNode)
-      .selectAll('text')
-      .data(this.props.data)
-      .attr('x', d => d.x * rectSide + rectPad)
-      .attr('y', d => this.state.histH - d.y * rectSide - rectSide - rectPad)
-      .text(d => d.id)
-      .attr('dy', '6px')
-      .attr('dx', '1px');
-
-    window.scrollTo( 0, this.state.histH ); // keep equator in same visual spot
-  }
+      ))
+      window.scrollTo( 0, this.state.histH );
+    }
 
   render() {
-    return <svg ref={this.svgNode} width={histW} height={this.state.histH} />;
+    return <svg
+             ref={this.svgNode}
+             width={this.state.histW}
+             height={this.state.histH}
+           />;
   }
 }
 

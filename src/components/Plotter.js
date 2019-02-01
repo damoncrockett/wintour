@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Histogram from './Histogram';
+import { histogram } from 'd3-array';
+import orderBy from 'lodash/orderBy';
 
 class Plotter extends React.Component {
   constructor(props) {
@@ -8,7 +10,7 @@ class Plotter extends React.Component {
       riskToggle: false,
       impToggle: false,
       ascToggle: false,
-      n: '0',
+      featNum: '0',
       bins: 100,
       data: null,
     };
@@ -18,7 +20,7 @@ class Plotter extends React.Component {
     this.handleBins = this.handleBins.bind(this);
     this.handleData = this.handleData.bind(this);
     this.getData = this.getData.bind(this);
-    this.processData = this.getData.bind(this);
+    this.processData = this.processData.bind(this);
   }
 
   handleRisk() {
@@ -40,7 +42,7 @@ class Plotter extends React.Component {
   }
 
   handleData(e) {
-    this.setState({n: e.target.value});
+    this.setState({featNum: e.target.value});
   }
 
   handleBins(e) {
@@ -50,31 +52,44 @@ class Plotter extends React.Component {
   getData() {
     // this ensures the user input will generate a valid filepath
     const validFilenames = Array.from(Array(1504).keys()).map(String);
-    if (validFilenames.includes(this.state.n)) {
-      fetch('http://localhost:8888/'+this.state.n+'.json')
+    if (validFilenames.includes(this.state.featNum)) {
+      fetch('http://localhost:8888/'+this.state.featNum+'.json')
         .then(response => response.json())
         .then(data => this.setState(state => ({
-          data: data // functional setState maybe overkill here
+          data: this.processData(data) // func setState maybe overkill here?
         })));
     }
   }
 
-  processData() {
-
+  processData(data) {
+    const sortOrder = this.state.ascToggle ? 'asc' : 'desc';
+    const histGen = histogram()
+                      .value(d => d.featVal)
+                      .thresholds(this.state.bins);
+    let processedData = histGen(data).map(d => orderBy(d,'score',sortOrder));
+    processedData.forEach((histBin,binNum) => {
+      histBin.forEach((item,idx) => {
+        item.x = binNum;
+        item.y = idx;
+      })
+    })
+    return processedData.flat();
   }
 
   componentDidMount() {
-    this.getData()
+    this.getData();
   }
 
   componentDidUpdate(prevProps, prevState) {
     // conditional prevents infinite loop from render to cDU
-    if (prevState.n !== this.state.n) {
-      this.getData()
+    if (prevState.featNum !== this.state.featNum) {
+      this.getData();
     }
     if (prevState.bins !== this.state.bins ||
       prevState.ascToggle !== this.state.ascToggle) {
-      this.processData()
+      this.setState(state => ({
+        data: this.processData(this.state.data) //process w no re-fetch
+      }))
     }
   }
 
@@ -82,7 +97,7 @@ class Plotter extends React.Component {
     const riskToggle = this.state.riskToggle;
     const impToggle = this.state.impToggle;
     const ascToggle = this.state.ascToggle;
-    const n = this.state.n;
+    const featNum = this.state.featNum;
     const bins = this.state.bins;
     const jsonData = this.state.data;
 
@@ -105,7 +120,7 @@ class Plotter extends React.Component {
         <fieldset>
           <legend>Enter feature number:</legend>
           <input
-            value={n}
+            value={featNum}
             onChange={this.handleData} />
         </fieldset>
         <fieldset>
