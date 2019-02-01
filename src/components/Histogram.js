@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { select } from 'd3-selection';
 import { min, max } from 'd3-array';
-import { togglesToFill, togglesToStroke } from '../lib/color';
+import { togglesToFill } from '../lib/color';
 
 class Histogram extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ class Histogram extends Component {
       rectPad: rectPad,
       histW: (rectSide + rectPad) * bins,
       histH: max(this.props.data.map(d => (
-        d.y * rectSide + rectSide + rectPad
+        d.y * (rectSide + rectPad) + rectSide
       )))
     }));
   }
@@ -52,7 +52,9 @@ class Histogram extends Component {
       .selectAll('rect')
       .data(this.props.data)
       .enter()
-      .append('rect');
+      .append('rect')
+      .attr('stroke', 'hsl(0, 0%, 15%)')
+      .attr('title', d => d.id);
 
 /*
     My data is always the same length, but I leave
@@ -75,17 +77,11 @@ class Histogram extends Component {
       .attr('height', this.state.rectSide)
       .attr('rx', String(this.state.rectSide * .15))
       .attr('ry', String(this.state.rectSide * .15))
-      .attr('x', d => d.x * this.state.rectSide + this.state.rectPad)
+      .attr('x', d => d.x * (this.state.rectSide + this.state.rectPad))
       .attr('y', d => (
         this.state.histH -
-        d.y * this.state.rectSide -
-        this.state.rectSide -
-        this.state.rectPad
-      ))
-      .attr('stroke', d => (
-        togglesToStroke(
-          this.props.impToggle ? d.imp : null,
-        )
+        d.y * (this.state.rectSide + this.state.rectPad) -
+        this.state.rectSide
       ))
       .attr('fill', d => (
         togglesToFill(

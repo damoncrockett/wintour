@@ -8,14 +8,6 @@ function togglesToFill (impVal, riskVal) {
   return 'hsl('+hue+','+sat+'%,'+lig+'%)';
 }
 
-function togglesToStroke (impVal) {
-  const hue = impVal ? String(0 * impVal) : '0';
-  const sat = hue==='0' ? '0' : '0';
-  const lig = '15';
-
-  return 'hsl('+hue+','+sat+'%,'+lig+'%)';
-}
-
 function randomChannel () {
   const popArray = Array.from(Array(256).keys());
   return Math.floor(Math.random() * popArray.length);
@@ -29,4 +21,4 @@ function randomRGB () {
   ];
 }
 
-export { togglesToFill, togglesToStroke, randomRGB };
+export { togglesToFill, randomRGB };

@@ -10,8 +10,3 @@ fieldset {
 	color: hsl(0, 0%, 75%);
 	font-family: monospace;
 }
-
-.rectLabel {
-	fill: hsl(0, 0%, 15%);
-	font-family: monospace;
-}

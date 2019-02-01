@@ -67,12 +67,15 @@ class Plotter extends React.Component {
                       .value(d => d.featVal)
                       .thresholds(this.state.bins);
     let processedData = histGen(data).map(d => orderBy(d,'score',sortOrder));
+    console.log(processedData);
     processedData.forEach((histBin,binNum) => {
       histBin.forEach((item,idx) => {
         item.x = binNum;
         item.y = idx;
       })
-    })
+    });
+    //console.log(JSON.stringify(processedData));
+
     return processedData.flat();
   }
 
