@@ -53,8 +53,7 @@ class Histogram extends Component {
       .data(this.props.data)
       .enter()
       .append('rect')
-      .attr('stroke', 'hsl(0, 0%, 15%)')
-      .attr('title', d => d.id);
+      .attr('stroke', 'hsl(0, 0%, 15%)');
 
 /*
     My data is always the same length, but I leave
@@ -89,6 +88,8 @@ class Histogram extends Component {
           this.props.riskToggle ? d.score : null
         )
       ))
+      .attr('title', d => d.id);
+
       window.scrollTo( 0, this.state.histH );
     }
 

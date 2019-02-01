@@ -3,7 +3,7 @@
 function togglesToFill (impVal, riskVal) {
   const hue = impVal ? String(120 * impVal) : '0';
   const sat = hue==='0' ? '0' : '100';
-  const lig = riskVal ? String(parseInt((1-riskVal) * 100)) : '50';
+  const lig = riskVal ? String(parseInt(riskVal * 100)) : '50'; // white = risky
 
   return 'hsl('+hue+','+sat+'%,'+lig+'%)';
 }
