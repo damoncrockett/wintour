@@ -12,6 +12,7 @@ class Plotter extends React.Component {
       ascToggle: false,
       featNum: '0',
       bins: 100,
+      binEdges: null,
       data: null,
     };
     this.handleRisk = this.handleRisk.bind(this);
@@ -20,7 +21,9 @@ class Plotter extends React.Component {
     this.handleBins = this.handleBins.bind(this);
     this.handleData = this.handleData.bind(this);
     this.getData = this.getData.bind(this);
-    this.processData = this.processData.bind(this);
+    this.binData = this.binData.bind(this);
+    this.assignCoords = this.assignCoords.bind(this);
+    this.getBinEdges = this.getBinEdges.bind(this);
   }
 
   handleRisk() {
@@ -56,25 +59,32 @@ class Plotter extends React.Component {
       fetch('http://localhost:8888/'+this.state.featNum+'.json')
         .then(response => response.json())
         .then(data => this.setState(state => ({
-          data: this.processData(data) // func setState maybe overkill here?
+          data: this.assignCoords(data), // func setState maybe overkill here?
+          binEdges: this.getBinEdges(data),
         })));
     }
   }
 
-  processData(data) {
+  binData(data) {
+    const hist = histogram().value(d => d.featVal).thresholds(this.state.bins);
+    return hist(data);
+  }
+
+  assignCoords(data) {
     const sortOrder = this.state.ascToggle ? 'asc' : 'desc';
-    const histGen = histogram()
-                      .value(d => d.featVal)
-                      .thresholds(this.state.bins);
-    let processedData = histGen(data).map(d => orderBy(d,'score',sortOrder));
-    processedData.forEach((histBin,binNum) => {
+    let processData = this.binData(data).map(d => orderBy(d,'score',sortOrder));
+    processData.forEach((histBin,binNum) => {
       histBin.forEach((item,idx) => {
         item.x = binNum;
         item.y = idx;
       })
     });
 
-    return processedData.flat();
+    return processData.flat();
+  }
+
+  getBinEdges(data) {
+    return this.binData(data).map(d => [d.x0, d.x1]);
   }
 
   componentDidMount() {
@@ -89,7 +99,8 @@ class Plotter extends React.Component {
     if (prevState.bins !== this.state.bins ||
       prevState.ascToggle !== this.state.ascToggle) {
       this.setState(state => ({
-        data: this.processData(this.state.data) //process w no re-fetch
+        data: this.assignCoords(this.state.data), //process w no re-fetch
+        binEdges: this.getBinEdges(this.state.data),
       }))
     }
   }
@@ -101,11 +112,13 @@ class Plotter extends React.Component {
     const featNum = this.state.featNum;
     const bins = this.state.bins;
     const jsonData = this.state.data;
+    const binEdges = this.state.binEdges;
 
     return (
       <div>
         <Histogram
           data={jsonData}
+          binEdges={binEdges}
           riskToggle={riskToggle}
           impToggle={impToggle}
         />

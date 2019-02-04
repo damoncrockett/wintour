@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { select } from 'd3-selection';
 import { min, max } from 'd3-array';
+import { scaleLinear } from 'd3-scale';
+import { axisBottom } from 'd3-axis';
 import { togglesToFill } from '../lib/color';
 
 class Histogram extends Component {
@@ -21,6 +23,8 @@ class Histogram extends Component {
     // conditional prevents infinite loop
     if (prevProps.data !== this.props.data) {
       this.setRectAttr();
+      console.log(this.props.binEdges);
+
     }
     // has to be outside conditional because buttons don't change props.data
     this.drawHistogram();
