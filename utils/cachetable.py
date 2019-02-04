@@ -86,4 +86,4 @@ def create_table(ft,X,imp,featnum):
     print("[DONE]")
 
 for j in range(num_feats):
-    create_table(ft,X,imp,num_feats)
+    create_table(ft,X,imp,j)

@@ -84,7 +84,7 @@ class Plotter extends React.Component {
   }
 
   getBinEdges(data) {
-    return this.binData(data).map(d => [d.x0, d.x1]);
+    return this.binData(data).map(d => d.x1);
   }
 
   componentDidMount() {

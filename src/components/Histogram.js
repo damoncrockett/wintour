@@ -24,7 +24,6 @@ class Histogram extends Component {
     if (prevProps.data !== this.props.data) {
       this.setRectAttr();
       console.log(this.props.binEdges);
-
     }
     // has to be outside conditional because buttons don't change props.data
     this.drawHistogram();
@@ -92,7 +91,7 @@ class Histogram extends Component {
           this.props.riskToggle ? d.score : null
         )
       ))
-      .attr('title', d => d.id);
+      .attr('title', d => d.featVal);
 
       window.scrollTo( 0, this.state.histH );
     }
