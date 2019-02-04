@@ -81,7 +81,6 @@ class Histogram extends Component {
       .attr('transform', `translate(${margin.left},${axisDrop + margin.top})`)
       .call(this.drawAxis()); // re-draws on same g
 
-    // This selection is non-empty only the first time
     select(svgNode)
       .selectAll('g.plotCanvas')
       .data([0]) // bc enter selection, prevents appending new 'g' on re-render
@@ -90,6 +89,7 @@ class Histogram extends Component {
       .attr('class', 'plotCanvas') // purely semantic
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
+    // This selection is non-empty only the first time
     select(svgNode)
       .select('g.plotCanvas')
       .selectAll('rect')
