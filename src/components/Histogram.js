@@ -5,7 +5,7 @@ import { scaleLinear } from 'd3-scale';
 import { axisBottom } from 'd3-axis';
 import { togglesToFill } from '../lib/color';
 
-const margin = {top: 20, right: 20, bottom: 20, left: 20};
+const margin = {top: 40, right: 20, bottom: 40, left: 20};
 const baseWidth = 800;
 const tickPct = 0.2;
 
