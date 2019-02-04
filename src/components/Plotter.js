@@ -96,7 +96,8 @@ class Plotter extends React.Component {
     if (prevState.featNum !== this.state.featNum) {
       this.getData();
     }
-    if (prevState.bins !== this.state.bins ||
+    if (prevState.bins !== this.state.bins &&
+      this.state.bins >= 2 || // won't reprocess on empty string
       prevState.ascToggle !== this.state.ascToggle) {
       this.setState(state => ({
         data: this.assignCoords(this.state.data), //process w no re-fetch

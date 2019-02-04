@@ -10,3 +10,7 @@ fieldset {
 	color: hsl(0, 0%, 75%);
 	font-family: monospace;
 }
+
+path, line, text {
+	color: hsl(0, 0%, 75%);
+}
