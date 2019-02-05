@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { select } from 'd3-selection';
 import { min, max } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
-import { axisBottom } from 'd3-axis';
+import { axisBottom, axisLeft } from 'd3-axis';
 import { togglesToFill } from '../lib/color';
 
-const margin = {top: 40, right: 20, bottom: 40, left: 20};
+const margin = {top: 40, right: 40, bottom: 40, left: 40};
 const baseWidth = 800;
 const tickPct = 0.2;
 
@@ -14,15 +14,17 @@ class Histogram extends Component {
     super(props);
     this.drawHistogram = this.drawHistogram.bind(this);
     this.setRectAttr = this.setRectAttr.bind(this);
-    this.drawAxis = this.drawAxis.bind(this);
+    this.drawAxisX = this.drawAxisX.bind(this);
+    this.drawAxisY = this.drawAxisY.bind(this);
     this.svgNode = React.createRef();
     this.state = {
-      histH: null,
-      histW: null,
-      svgH: null,
-      svgW: null,
       rectSide: null,
       rectPad: null,
+      svgH: null,
+      svgW: null,
+      histH: null,
+      histW: null,
+      maxY: null,
       trueBins: null,
     };
   }
@@ -54,11 +56,12 @@ class Histogram extends Component {
       svgH: h + margin.top + margin.bottom,
       histW: w,
       histH: h,
+      maxY: maxY,
       trueBins: bins,
     }));
   }
 
-  drawAxis() {
+  drawAxisX() {
     const featVals = this.props.data.map(d => d.featVal);
     const minFeatVal = min(featVals);
     const maxFeatVal = max(featVals);
@@ -67,6 +70,13 @@ class Histogram extends Component {
                 .domain([min(featVals), max(featVals)])
                 .range([0, histW]);
     return axisBottom(x).ticks(Math.round(this.state.trueBins * tickPct));
+  }
+
+  drawAxisY() {
+    const y = scaleLinear()
+                .domain([0, this.state.maxY])
+                .range([this.state.histH, 0]);
+    return axisLeft(y).ticks(Math.round(this.state.maxY * tickPct));
   }
 
   drawHistogram() {
@@ -82,8 +92,22 @@ class Histogram extends Component {
 
     select(svgNode)
       .select('g.xAxis') // the g of class xAxis
-      .attr('transform', `translate(${margin.left},${axisDrop + margin.top})`)
-      .call(this.drawAxis()); // re-draws on same g
+      .attr('transform', `translate(${margin.left},${axisDrop+margin.top})`)
+      .call(this.drawAxisX()); // re-draws on same g
+
+    select(svgNode)
+      .selectAll('g.yAxis')
+      .data([0]) // bc enter selection, prevents appending new 'g' on re-render
+      .enter()
+      .append('g')
+      .attr('class', 'yAxis'); // purely semantic
+
+    select(svgNode)
+      .select('g.yAxis') // the g of class xAxis
+      .attr('transform',
+            `translate(${margin.left},${margin.top})`)
+      .call(this.drawAxisY())
+      .call(g => g.select(".domain").remove()); // re-draws on same g
 
     select(svgNode)
       .selectAll('g.plotCanvas')
