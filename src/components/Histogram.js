@@ -39,25 +39,26 @@ class Histogram extends Component {
   }
 
   setRectAttr() {
-    const binNums = this.props.data.map(d => d.x);
-    const binMin = min(binNums);
-    const binMax = max(binNums);
-    const bins = binMax - binMin + 1;
-    const rectSide = baseWidth / bins;
+    const binLabels = this.props.data.map(d => d.x);
+    const binMin = min(binLabels);
+    const binMax = max(binLabels);
+    const binDiff = binMax - binMin;
+    const trueBins = binDiff + 1;
+    const rectSide = baseWidth / trueBins;
     const rectPad = rectSide * 0.1;
-    const w = (rectSide + rectPad) * bins;
+    const histW = binDiff * (rectSide + rectPad) + rectSide; // no outer pads
     const maxY = max(this.props.data.map(d => d.y));
-    const h = maxY * (rectSide + rectPad) + rectSide;
+    const histH = maxY * (rectSide + rectPad) + rectSide; // no outer pads
 
     this.setState(state => ({
       rectSide: rectSide,
       rectPad: rectPad,
-      svgW: w + margin.left + margin.right,
-      svgH: h + margin.top + margin.bottom,
-      histW: w,
-      histH: h,
+      svgW: histW + margin.left + margin.right,
+      svgH: histH + margin.top + margin.bottom,
+      histW: histW,
+      histH: histH,
       maxY: maxY,
-      trueBins: bins,
+      trueBins: trueBins,
     }));
   }
 
@@ -102,7 +103,7 @@ class Histogram extends Component {
     select(svgNode)
       .select('g.yAxis') // the g of class yAxis
       .attr('transform',
-            `translate(${margin.left},${margin.top})`)
+            `translate(${margin.left - this.state.rectPad},${margin.top})`)
       .call(this.drawAxisY()) // re-draws on same g
       .call(g => g.select(".domain").remove()); // removes vertical axis line
 
