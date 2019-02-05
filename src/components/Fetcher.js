@@ -59,13 +59,11 @@ class Fetcher extends React.Component {
 
   render() {
     return (
-      <div>
-        <Plotter
-          data={this.state.data}
-          riskToggle={this.props.riskToggle}
-          impToggle={this.props.impToggle}
-        />
-      </div>
+      <Plotter
+        data={this.state.data}
+        riskToggle={this.props.riskToggle}
+        impToggle={this.props.impToggle}
+      />
     );
   }
 }
