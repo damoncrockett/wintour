@@ -63,12 +63,9 @@ class Histogram extends Component {
 
   drawAxisX() {
     const featVals = this.props.data.map(d => d.featVal);
-    const minFeatVal = min(featVals);
-    const maxFeatVal = max(featVals);
-    const histW = this.state.histW;
     const x = scaleLinear()
                 .domain([min(featVals), max(featVals)])
-                .range([0, histW]);
+                .range([0, this.state.histW]);
     return axisBottom(x).ticks(Math.round(this.state.trueBins * tickPct));
   }
 
