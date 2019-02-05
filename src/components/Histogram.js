@@ -106,8 +106,8 @@ class Histogram extends Component {
       .select('g.yAxis') // the g of class xAxis
       .attr('transform',
             `translate(${margin.left},${margin.top})`)
-      .call(this.drawAxisY())
-      .call(g => g.select(".domain").remove()); // re-draws on same g
+      .call(this.drawAxisY()) // re-draws on same g
+      .call(g => g.select(".domain").remove()); // removes vertical axis line
 
     select(svgNode)
       .selectAll('g.plotCanvas')
