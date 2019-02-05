@@ -23,6 +23,7 @@ class Histogram extends Component {
       svgW: null,
       rectSide: null,
       rectPad: null,
+      trueBins: null,
     };
   }
 
@@ -39,11 +40,11 @@ class Histogram extends Component {
     const binNums = this.props.data.map(d => d.x);
     const binMin = min(binNums);
     const binMax = max(binNums);
-    const maxY = max(this.props.data.map(d => d.y));
     const bins = binMax - binMin + 1;
     const rectSide = baseWidth / bins;
     const rectPad = rectSide * 0.1;
     const w = (rectSide + rectPad) * bins;
+    const maxY = max(this.props.data.map(d => d.y));
     const h = maxY * (rectSide + rectPad) + rectSide;
 
     this.setState(state => ({
@@ -52,7 +53,8 @@ class Histogram extends Component {
       svgW: w + margin.left + margin.right,
       svgH: h + margin.top + margin.bottom,
       histW: w,
-      histH: h
+      histH: h,
+      trueBins: bins,
     }));
   }
 
@@ -60,12 +62,11 @@ class Histogram extends Component {
     const featVals = this.props.data.map(d => d.featVal);
     const minFeatVal = min(featVals);
     const maxFeatVal = max(featVals);
-    const binEdges = this.props.binEdges;
     const histW = this.state.histW;
     const x = scaleLinear()
                 .domain([min(featVals), max(featVals)])
                 .range([0, histW]);
-    return axisBottom(x).ticks(Math.round(binEdges.length * tickPct));
+    return axisBottom(x).ticks(Math.round(this.state.trueBins * tickPct));
   }
 
   drawHistogram() {
