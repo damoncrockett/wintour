@@ -103,7 +103,7 @@ class Histogram extends Component {
       .attr('class', 'yAxis'); // purely semantic
 
     select(svgNode)
-      .select('g.yAxis') // the g of class xAxis
+      .select('g.yAxis') // the g of class yAxis
       .attr('transform',
             `translate(${margin.left},${margin.top})`)
       .call(this.drawAxisY()) // re-draws on same g
