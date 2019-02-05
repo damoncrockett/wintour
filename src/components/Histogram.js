@@ -36,8 +36,9 @@ class Histogram extends Component {
   }
 
   setRectAttr() {
-    const binMin = min(this.props.data.map(d => d.x));
-    const binMax = max(this.props.data.map(d => d.x));
+    const binNums = this.props.data.map(d => d.x);
+    const binMin = min(binNums);
+    const binMax = max(binNums);
     const maxY = max(this.props.data.map(d => d.y));
     const bins = binMax - binMin + 1;
     const rectSide = baseWidth / bins;
@@ -57,11 +58,13 @@ class Histogram extends Component {
 
   drawAxis() {
     const featVals = this.props.data.map(d => d.featVal);
+    const minFeatVal = min(featVals);
+    const maxFeatVal = max(featVals);
     const binEdges = this.props.binEdges;
     const histW = this.state.histW;
     const x = scaleLinear()
-                .domain([min(featVals),max(featVals)])
-                .range([0,histW]);
+                .domain([min(featVals), max(featVals)])
+                .range([0, histW]);
     return axisBottom(x).ticks(Math.round(binEdges.length * tickPct));
   }
 
@@ -124,8 +127,6 @@ class Histogram extends Component {
     }
 
   render() {
-    console.log(this.props.data);
-    console.log(this.props.binEdges);
     return <svg
              ref={this.svgNode}
              width={this.state.svgW}
