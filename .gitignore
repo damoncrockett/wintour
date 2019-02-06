@@ -2,6 +2,7 @@ node_modules
 dist
 .DS_Store
 utils/notebooks
+utils/.ipynb_checkpoints
 utils/scripts
 utils/data
 *.ipynb
