@@ -8,13 +8,11 @@ class Plotter extends React.Component {
 
   render() {
     return (
-      <div>
         <Histogram
           data={this.props.data}
           riskToggle={this.props.riskToggle}
           impToggle={this.props.impToggle}
         />
-      </div>
     );
   }
 }

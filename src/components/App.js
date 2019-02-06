@@ -4,7 +4,9 @@ import Handler from './Handler';
 class App extends Component {
   render() {
     return (
-      <Handler />
+      <div>
+        <Handler />
+      </div>
     );
   }
 }
