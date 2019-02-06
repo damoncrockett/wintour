@@ -2,6 +2,10 @@ rect:hover {
 	fill: #ff8800;
 }
 
+rect.gallery:hover {
+	fill: hsl(0, 0%, 15%);
+}
+
 body {
 	background-color: hsl(0, 0%, 15%);
 }
@@ -13,4 +17,8 @@ fieldset {
 
 path, line, text {
 	color: hsl(0, 0%, 75%);
+}
+
+svg.panel {
+	float: right;
 }

@@ -29,8 +29,8 @@ class Fetcher extends React.Component {
     const sortOrder = this.props.ascToggle ? 'asc' : 'desc';
     const hist = histogram().value(d => d.featVal).thresholds(this.props.bins);
     let processData = hist(data).map(d => orderBy(d,'score',sortOrder));
-    processData.forEach((histBin,binNum) => {
-      histBin.forEach((item,idx) => {
+    processData.forEach((histBin, binNum) => {
+      histBin.forEach((item, idx) => {
         item.x = binNum;
         item.y = idx;
       })
