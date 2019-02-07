@@ -17,7 +17,7 @@ const rectSide = 10;
 const rectPad = 1;
 const margin = {top: 10, right: 10, bottom: 10, left: 10};
 
-class Gallery extends React.Component {
+class Gallery extends Component {
   constructor(props) {
     super(props);
     this.drawFeatGallery = this.drawFeatGallery.bind(this);
@@ -53,7 +53,7 @@ class Gallery extends React.Component {
       .attr('x', d => d.x * (rectSide + rectPad) + rectPad)
       .attr('y', d => d.y * (rectSide + rectPad) + rectPad)
       .attr('fill', d => colorMap[d.rType])
-      .on('click', (d, i) => {this.props.onClick(i)});
+      .on('click', (d, i) => {this.props.handleData(i)});
   }
 
   componentDidMount() {

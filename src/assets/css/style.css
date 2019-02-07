@@ -10,11 +10,17 @@ body {
 	background-color: hsl(0, 0%, 15%);
 }
 
-fieldset {
-	color: hsl(0, 0%, 75%);
-	font-family: monospace;
-}
-
 path, line, text {
 	color: hsl(0, 0%, 75%);
+}
+
+.field {
+	float: left;
+	max-width: 1200px;
+}
+
+.panel {
+  right: 40px;
+	bottom: 400px;
+  position: fixed;
 }
