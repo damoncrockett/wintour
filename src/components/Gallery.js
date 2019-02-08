@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { select } from 'd3-selection';
 import feattable from '../assets/json/feattable.json';
+import range from 'lodash/range';
 import zipObject from 'lodash/zipObject';
 import sampleSize from 'lodash/sampleSize';
 
 let rTypes = new Set(feattable.map(d => d.rType));
 rTypes = Array.from(rTypes);
 
-const colors = [
-  '#e6194B','#3cb44b','#ffe119','#4363d8','#f58231','#42d4f4','#f032e6',
-  '#fabebe','#469990','#e6beff','#9A6324','#fffac8','#800000','#aaffc3',
-];
+const hues = range(0, 330, 20);
+const colors = hues.map(d => `hsl(${d}, 30%, 40%)`);
+const hvrColors = hues.map(d => `hsl(${d}, 60%, 80%)`);
 
-const colorMap = zipObject(rTypes, sampleSize(colors, colors.length));
+const colorMap = zipObject(rTypes, sampleSize(colors, rTypes.length));
+const hvrColorMap = zipObject(rTypes, sampleSize(hvrColors, rTypes.length));
 const rectSide = 10;
 const rectPad = 1;
 const nCols = 47;
@@ -54,7 +55,7 @@ class Gallery extends Component {
       .attr('y', d => d.y * (rectSide + rectPad) + rectPad)
       .attr('fill', d => colorMap[d.rType])
       .on('click', (d, i) => {this.props.handleData(i)});
-      
+
   }
 
   componentDidMount() {

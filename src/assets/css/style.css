@@ -4,15 +4,7 @@
 }
 
 rect:hover {
-	fill: #ff8800;
-}
-
-rect.unselected {
-	fill: var(--panel-background);
-}
-
-rect.selected {
-	fill: var(--panel-stroke);
+	fill: hsl(32, 100%, 50%);
 }
 
 rect.gallery {
@@ -25,10 +17,12 @@ rect.gallery:hover {
 
 rect#riskToggle, rect#impToggle, rect#ascToggle {
 	stroke: var(--panel-stroke);
+	fill: var(--panel-background);
 }
 
 rect#riskToggle:hover, rect#impToggle:hover, rect#ascToggle:hover {
-	fill: hsl(0, 0%, 13%);
+	stroke: hsl(0, 0%, 70%);
+  fill: hsl(0, 0%, 14%)
 }
 
 body {
@@ -37,6 +31,10 @@ body {
 
 path, line, text {
 	color: hsl(0, 0%, 75%);
+}
+
+text {
+  pointer-events: none;
 }
 
 .field {

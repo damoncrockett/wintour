@@ -64,6 +64,33 @@ class PlotToggles extends Component {
       .attr('y', margin.top)
       .on('click', () => this.props.handleAsc());
 
+    select(svgNode)
+      .select('g.toggleStrip')
+      .append('text')
+      .attr('x', 76)
+      .attr('y', margin.top * 5)
+      .text('RISK')
+      .attr('font-family', 'sans-serif')
+      .attr('fill', 'hsl(0, 0%, 45% )');
+
+    select(svgNode)
+      .select('g.toggleStrip')
+      .append('text')
+      .attr('x', 207)
+      .attr('y', margin.top * 5)
+      .text('IMPORTANCE')
+      .attr('font-family', 'sans-serif')
+      .attr('fill', 'hsl(0, 0%, 45% )');
+
+    select(svgNode)
+      .select('g.toggleStrip')
+      .append('text')
+      .attr('x', 374)
+      .attr('y', margin.top * 5)
+      .text('ASCENDING')
+      .attr('font-family', 'sans-serif')
+      .attr('fill', 'hsl(0, 0%, 45% )');
+
   }
 
   componentDidMount() {
