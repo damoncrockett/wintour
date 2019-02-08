@@ -14,7 +14,7 @@ ft = pd.read_csv(FEATTABLE)
 ft.sort_values(by="feature_importance",ascending=False,inplace=True)
 ft = ft.fillna('null')
 
-sys.path.append(HOME+"ivpy-test/src/")
+sys.path.append(HOME+"ivpytest/src/")
 from ivpy.plottools import _gridcoords
 w, h, coords = _gridcoords(len(ft),47,1)
 ft['coords'] = coords
