@@ -6,7 +6,7 @@ import { axisBottom, axisLeft } from 'd3-axis';
 import { togglesToFill } from '../lib/color';
 
 const margin = {top: 40, right: 40, bottom: 40, left: 40};
-const baseWidth = 1000;
+const baseWidth = 700;
 const tickPct = 0.2;
 
 class Histogram extends Component {

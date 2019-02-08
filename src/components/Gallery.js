@@ -15,6 +15,10 @@ const colors = [
 const colorMap = zipObject(rTypes, sampleSize(colors, colors.length));
 const rectSide = 10;
 const rectPad = 1;
+const nCols = 47;
+const nRows = 32;
+const width = nCols * (rectSide + rectPad) + rectPad;
+const height = nRows * (rectSide + rectPad) + rectPad;
 const margin = {top: 10, right: 10, bottom: 10, left: 10};
 
 class Gallery extends Component {
@@ -62,11 +66,11 @@ class Gallery extends Component {
 
   render() {
     return (
-        <svg
-          ref={this.svgNode}
-          width={518+margin.left+margin.right}
-          height={353+margin.top+margin.bottom}
-        />
+      <svg
+        ref={this.svgNode}
+        width={width+margin.left+margin.right}
+        height={height+margin.top+margin.bottom}
+      />
     );
   }
 }

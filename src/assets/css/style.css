@@ -6,6 +6,10 @@ rect.gallery:hover {
 	fill: hsl(0, 0%, 15%);
 }
 
+rect.riskToggle:hover, rect.impToggle:hover, rect.ascToggle:hover {
+	fill: hsl(220, 75%, 75%);
+}
+
 body {
 	background-color: hsl(0, 0%, 15%);
 }
@@ -16,11 +20,12 @@ path, line, text {
 
 .field {
 	float: left;
-	max-width: 1200px;
+	max-width: 750px;
 }
 
 .panel {
   right: 40px;
-	bottom: 400px;
+	bottom: 0px;
   position: fixed;
+	max-width: 530px;
 }
