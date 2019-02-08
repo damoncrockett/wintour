@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { select } from 'd3-selection';
 
-const margin = {top: 10, right: 10, bottom: 10, left: 10};
+const margin = {top: 5, right: 20, bottom: 30, left: 20};
 const width = 518;
-const buttonWidth = 109;
-const buttonHeight = 67.3657047737;
-const buttonGap = (width - buttonWidth * 3) / 2;
-const height = buttonHeight + margin.top + margin.bottom;
+const stripPad = 20;
+const stripWidth = width - stripPad * 2;
+const buttonWidth = 150;
+const buttonHeight = 30;
+const buttonGap = (stripWidth - buttonWidth * 3) / 2;
+const buttonRadiusPct = 0.5;
 
 class PlotToggles extends Component {
   constructor(props) {
@@ -22,63 +24,45 @@ class PlotToggles extends Component {
       .attr('class','toggleStrip'); // semantic
 
     select(svgNode)
-      .selectAll('g.toggleStrip')
-      .data([0])
-      .enter()
       .append('g')
       .attr('class', 'toggleStrip')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
     select(svgNode)
       .select('g.toggleStrip')
-      .selectAll('rect.risk')
-      .data([0])
-      .enter()
       .append('rect')
-      .attr('class', 'riskToggle')
+      .attr('id', 'riskToggle')
       .attr('width', buttonWidth)
       .attr('height', buttonHeight)
-      .attr('stroke', 'hsl(0, 0%, 75%)')
-      .attr('rx', buttonHeight * .15)
-      .attr('ry', buttonHeight * .15)
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('fill', 'hsl(0, 0%, 15%)')
-      .on('click', d => this.props.handleRisk());
+      .attr('rx', buttonHeight * buttonRadiusPct)
+      .attr('ry', buttonHeight * buttonRadiusPct)
+      .attr('x', stripPad)
+      .attr('y', margin.top)
+      .on('click', () => this.props.handleRisk());
 
     select(svgNode)
       .select('g.toggleStrip')
-      .selectAll('rect.impToggle')
-      .data([0])
-      .enter()
       .append('rect')
-      .attr('class', 'impToggle')
+      .attr('id', 'impToggle')
       .attr('width', buttonWidth)
       .attr('height', buttonHeight)
-      .attr('stroke', 'hsl(0, 0%, 75%)')
-      .attr('rx', buttonHeight * .15)
-      .attr('ry', buttonHeight * .15)
-      .attr('x', buttonWidth + buttonGap)
-      .attr('y', 0)
-      .attr('fill', 'hsl(0, 0%, 15%)')
-      .on('click', d => this.props.handleImp());
+      .attr('rx', buttonHeight * buttonRadiusPct)
+      .attr('ry', buttonHeight * buttonRadiusPct)
+      .attr('x', stripPad + buttonWidth + buttonGap)
+      .attr('y', margin.top)
+      .on('click', () => this.props.handleImp());
 
     select(svgNode)
       .select('g.toggleStrip')
-      .selectAll('rect.ascToggle')
-      .data([0])
-      .enter()
       .append('rect')
-      .attr('class', 'ascToggle')
+      .attr('id', 'ascToggle')
       .attr('width', buttonWidth)
       .attr('height', buttonHeight)
-      .attr('stroke', 'hsl(0, 0%, 75%)')
-      .attr('rx', buttonHeight * .15)
-      .attr('ry', buttonHeight * .15)
-      .attr('x', 2 * (buttonWidth + buttonGap))
-      .attr('y', 0)
-      .attr('fill', 'hsl(0, 0%, 15%)')
-      .on('click', d => this.props.handleAsc());
+      .attr('rx', buttonHeight * buttonRadiusPct)
+      .attr('ry', buttonHeight * buttonRadiusPct)
+      .attr('x', stripPad + 2 * (buttonWidth + buttonGap))
+      .attr('y', margin.top)
+      .on('click', () => this.props.handleAsc());
 
   }
 
@@ -91,7 +75,7 @@ class PlotToggles extends Component {
       <svg
         ref={this.svgNode}
         width={width+margin.left+margin.right}
-        height={height+margin.top+margin.bottom}
+        height={buttonHeight+margin.top+margin.bottom}
       />
     );
   }

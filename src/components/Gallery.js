@@ -19,7 +19,7 @@ const nCols = 47;
 const nRows = 32;
 const width = nCols * (rectSide + rectPad) + rectPad;
 const height = nRows * (rectSide + rectPad) + rectPad;
-const margin = {top: 10, right: 10, bottom: 10, left: 10};
+const margin = {top: 20, right: 20, bottom: 5, left: 20};
 
 class Gallery extends Component {
   constructor(props) {
@@ -35,9 +35,6 @@ class Gallery extends Component {
       .attr('class', 'gallery');
 
     select(svgNode)
-      .selectAll('g.gallery')
-      .data([0])
-      .enter()
       .append('g')
       .attr('class', 'gallery')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -51,13 +48,13 @@ class Gallery extends Component {
       .attr('class', 'gallery')
       .attr('width', rectSide)
       .attr('height', rectSide)
-      .attr('stroke', 'hsl(0, 0%, 15%)')
       .attr('rx', rectSide * .15)
       .attr('ry', rectSide * .15)
       .attr('x', d => d.x * (rectSide + rectPad) + rectPad)
       .attr('y', d => d.y * (rectSide + rectPad) + rectPad)
       .attr('fill', d => colorMap[d.rType])
       .on('click', (d, i) => {this.props.handleData(i)});
+      
   }
 
   componentDidMount() {
