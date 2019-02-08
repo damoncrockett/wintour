@@ -8,7 +8,7 @@ I'm building this app in stages, as I learn. The app is essentially fully design
 ###### 4: all 1504 features, select by user input [done]
 ###### 5: data processing on the fly, resorting and rebinning [done]
 ###### 6: axis labels (observe margin convention, 'g' element) [done]
-###### 7: select feature by nav controls
+###### 7: select feature by nav controls [done]
 ###### 8: individual view on separate 'zoom' pane, on hover
 
 ### New Tabs
