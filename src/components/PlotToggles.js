@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { select } from 'd3-selection';
 
-const margin = {top: 5, right: 20, bottom: 30, left: 20};
-const width = 518;
-const stripPad = 20;
+const margin = {top: 3, right: 12, bottom: 18, left: 12};
+const width = 310.8;
+const stripPad = 12;
 const stripWidth = width - stripPad * 2;
-const buttonWidth = 150;
-const buttonHeight = 30;
+const buttonWidth = 90;
+const buttonHeight = 18;
 const buttonGap = (stripWidth - buttonWidth * 3) / 2;
 const buttonRadiusPct = 0.5;
 
@@ -63,33 +63,6 @@ class PlotToggles extends Component {
       .attr('x', stripPad + 2 * (buttonWidth + buttonGap))
       .attr('y', margin.top)
       .on('click', () => this.props.handleAsc());
-
-    select(svgNode)
-      .select('g.toggleStrip')
-      .append('text')
-      .attr('x', 76)
-      .attr('y', margin.top * 5)
-      .text('RISK')
-      .attr('font-family', 'sans-serif')
-      .attr('fill', 'hsl(0, 0%, 45% )');
-
-    select(svgNode)
-      .select('g.toggleStrip')
-      .append('text')
-      .attr('x', 207)
-      .attr('y', margin.top * 5)
-      .text('IMPORTANCE')
-      .attr('font-family', 'sans-serif')
-      .attr('fill', 'hsl(0, 0%, 45% )');
-
-    select(svgNode)
-      .select('g.toggleStrip')
-      .append('text')
-      .attr('x', 374)
-      .attr('y', margin.top * 5)
-      .text('ASCENDING')
-      .attr('font-family', 'sans-serif')
-      .attr('fill', 'hsl(0, 0%, 45% )');
 
   }
 

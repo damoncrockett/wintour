@@ -39,14 +39,14 @@ text {
 
 .field {
 	float: left;
-	max-width: 750px;
+	max-width: 1000px;
 }
 
 .panel {
   right: 40px;
 	bottom: 40px;
   position: fixed;
-	max-width: 558px;
+	max-width: 334.8px;
 	background-color: var(--panel-background);
 	border-radius: 10px;
 	border-color: var(--panel-stroke);

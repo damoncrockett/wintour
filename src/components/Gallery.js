@@ -14,13 +14,13 @@ const hvrColors = hues.map(d => `hsl(${d}, 60%, 80%)`);
 
 const colorMap = zipObject(rTypes, sampleSize(colors, rTypes.length));
 const hvrColorMap = zipObject(rTypes, sampleSize(hvrColors, rTypes.length));
-const rectSide = 10;
-const rectPad = 1;
+const rectSide = 6;
+const rectPad = 0.6;
 const nCols = 47;
 const nRows = 32;
 const width = nCols * (rectSide + rectPad) + rectPad;
 const height = nRows * (rectSide + rectPad) + rectPad;
-const margin = {top: 20, right: 20, bottom: 5, left: 20};
+const margin = {top: 12, right: 12, bottom: 3, left: 12};
 
 class Gallery extends Component {
   constructor(props) {
