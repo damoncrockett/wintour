@@ -10,10 +10,7 @@ rTypes = Array.from(rTypes);
 
 const hues = range(0, 330, 20);
 const colors = hues.map(d => `hsl(${d}, 30%, 40%)`);
-const hvrColors = hues.map(d => `hsl(${d}, 60%, 80%)`);
-
 const colorMap = zipObject(rTypes, sampleSize(colors, rTypes.length));
-const hvrColorMap = zipObject(rTypes, sampleSize(hvrColors, rTypes.length));
 const rectSide = 6;
 const rectPad = 0.6;
 const nCols = 47;
