@@ -15,26 +15,12 @@ rect.gallery:hover {
 	fill: var(--panel-background);
 }
 
-rect#riskToggle, rect#impToggle, rect#ascToggle {
-	stroke: var(--panel-stroke);
-	fill: var(--panel-background);
-}
-
-rect#riskToggle:hover, rect#impToggle:hover, rect#ascToggle:hover {
-	stroke: hsl(0, 0%, 70%);
-  fill: hsl(0, 0%, 14%);
-}
-
 body {
 	background-color: hsl(0, 0%, 15%);
 }
 
 path, line, text {
 	color: hsl(0, 0%, 75%);
-}
-
-text {
-  pointer-events: none;
 }
 
 .field {
@@ -64,7 +50,7 @@ text {
 button, button:focus, button:active {
   font-family: sans-serif;
   border-color: var(--panel-stroke);
-  border-radius: 15px;
+  border-radius: 5px;
   padding: 5px;
   margin-left: 5px;
   margin-right: 5px;
@@ -72,5 +58,6 @@ button, button:focus, button:active {
 }
 
 button:hover {
-  border-color: white;
+  border-color: hsl(0, 0%, 65%);
+  color: hsl(0, 0%, 65%) !important;
 }
