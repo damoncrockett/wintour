@@ -22,7 +22,7 @@ rect#riskToggle, rect#impToggle, rect#ascToggle {
 
 rect#riskToggle:hover, rect#impToggle:hover, rect#ascToggle:hover {
 	stroke: hsl(0, 0%, 70%);
-  fill: hsl(0, 0%, 14%)
+  fill: hsl(0, 0%, 14%);
 }
 
 body {
@@ -52,4 +52,25 @@ text {
 	border-color: var(--panel-stroke);
 	border-width: 1px;
 	border-style: solid;
+  text-align: center; /* for centering buttonStrip */
+}
+
+.buttonStrip {
+  display: inline-block;
+  padding-bottom: 20px;
+  padding-top: 10px;
+}
+
+button, button:focus, button:active {
+  font-family: sans-serif;
+  border-color: var(--panel-stroke);
+  border-radius: 15px;
+  padding: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  outline: none;
+}
+
+button:hover {
+  border-color: white;
 }
