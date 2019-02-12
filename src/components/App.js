@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Histogram from './Histogram';
-import PlotToggles from './PlotToggles';
 import Gallery from './Gallery';
 
 import { histogram } from 'd3-array';
@@ -92,6 +91,19 @@ class App extends Component {
   }
 
   render() {
+    const riskStyle = {
+      backgroundColor: this.state.riskToggle ? 'white' : 'hsl(0, 0%, 15%)',
+      color: this.state.riskToggle ? 'black' : 'hsl(0, 0%, 45%)',
+    };
+    const impStyle = {
+      backgroundColor: this.state.impToggle ? 'white' : 'hsl(0, 0%, 15%)',
+      color: this.state.impToggle ? 'black' : 'hsl(0, 0%, 45%)',
+    };
+    const ascStyle = {
+      backgroundColor: this.state.ascToggle ? 'white' : 'hsl(0, 0%, 15%)',
+      color: this.state.ascToggle ? 'black' : 'hsl(0, 0%, 45%)',
+    };
+
     return (
       <div className='app'>
         <div className='field'>
@@ -105,11 +117,11 @@ class App extends Component {
           <Gallery
             handleData={this.handleData}
           />
-          <PlotToggles
-            handleRisk={this.handleRisk}
-            handleImp={this.handleImp}
-            handleAsc={this.handleAsc}
-          />
+          <div className='buttonStrip'>
+            <button onClick={this.handleRisk} style={riskStyle}>RISK</button>
+            <button onClick={this.handleImp} style={impStyle}>IMP</button>
+            <button onClick={this.handleAsc} style={ascStyle}>ASC</button>
+          </div>
         </div>
       </div>
     );
