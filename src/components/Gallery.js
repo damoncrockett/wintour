@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { select } from 'd3-selection';
+import React from 'react';
 import feattable from '../assets/json/feattable.json';
 import range from 'lodash/range';
 import zipObject from 'lodash/zipObject';
@@ -17,57 +16,30 @@ const nCols = 47;
 const nRows = 32;
 const width = nCols * (rectSide + rectPad) + rectPad;
 const height = nRows * (rectSide + rectPad) + rectPad;
-const margin = {top: 12, right: 12, bottom: 3, left: 12};
+const margin = { top: 12, right: 12, bottom: 3, left: 12 };
 
-class Gallery extends Component {
-  constructor(props) {
-    super(props);
-    this.drawFeatGallery = this.drawFeatGallery.bind(this);
-    this.svgNode = React.createRef();
-  }
+const Gallery = ({ handleData }) => {
 
-  drawFeatGallery() {
-    const svgNode = this.svgNode.current;
-
-    select(svgNode)
-      .attr('class', 'gallery');
-
-    select(svgNode)
-      .append('g')
-      .attr('class', 'gallery')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
-
-    select(svgNode)
-      .select('g.gallery')
-      .selectAll('rect')
-      .data(feattable)
-      .enter()
-      .append('rect')
-      .attr('class', 'gallery')
-      .attr('width', rectSide)
-      .attr('height', rectSide)
-      .attr('rx', rectSide * .15)
-      .attr('ry', rectSide * .15)
-      .attr('x', d => d.x * (rectSide + rectPad) + rectPad)
-      .attr('y', d => d.y * (rectSide + rectPad) + rectPad)
-      .attr('fill', d => colorMap[d.rType])
-      .on('click', (d, i) => {this.props.handleData(i)});
-
-  }
-
-  componentDidMount() {
-    this.drawFeatGallery();
-  }
-
-  render() {
     return (
-      <svg
-        ref={this.svgNode}
-        width={width+margin.left+margin.right}
-        height={height+margin.top+margin.bottom}
-      />
+        <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}>
+            <g transform={`translate(${margin.left},${margin.top})`}>
+                {feattable.map((d, i) => (
+                    <rect
+                        key={i}
+                        className="gallery"
+                        width={rectSide}
+                        height={rectSide}
+                        rx={rectSide * 0.15}
+                        ry={rectSide * 0.15}
+                        x={d.x * (rectSide + rectPad) + rectPad}
+                        y={d.y * (rectSide + rectPad) + rectPad}
+                        fill={colorMap[d.rType]}
+                        onClick={() => handleData(i)}
+                    />
+                ))}
+            </g>
+        </svg>
     );
-  }
 }
 
 export default Gallery;

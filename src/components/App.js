@@ -1,131 +1,81 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Histogram from './Histogram';
 import Gallery from './Gallery';
-
-import { histogram } from 'd3-array';
+import { bin } from 'd3-array';
 import orderBy from 'lodash/orderBy';
 
 const bins = 100;
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+const App = () => {
+    const [riskToggle, setRiskToggle] = useState(false);
+    const [impToggle, setImpToggle] = useState(false);
+    const [ascToggle, setAscToggle] = useState(false);
+    const [featNum, setFeatNum] = useState('0');
+    const [data, setData] = useState(null);
 
-    this.state = { // global state
-      riskToggle: false,
-      impToggle: false,
-      ascToggle: false,
-      featNum: '0',
-      data: null,
-    };
+    const handleRisk = useCallback(() => setRiskToggle(prevRisk => !prevRisk), []);
+    const handleImp = useCallback(() => setImpToggle(prevImp => !prevImp), []);
+    const handleAsc = useCallback(() => setAscToggle(prevAsc => !prevAsc), []);
+    const handleData = useCallback((i) => setFeatNum(String(i)), []);
 
-    this.handleRisk = this.handleRisk.bind(this);
-    this.handleImp = this.handleImp.bind(this);
-    this.handleAsc = this.handleAsc.bind(this);
-    this.handleData = this.handleData.bind(this);
-    this.getData = this.getData.bind(this);
-    this.assignCoords = this.assignCoords.bind(this);
-  }
+    const assignCoords = useCallback((dataToAssign) => {
+        const sortOrder = ascToggle ? 'asc' : 'desc';
 
-  handleRisk() {
-    this.setState(state => ({
-      riskToggle: !state.riskToggle
-    }));
-  }
+        const histGenerator = bin()
+            .value(d => d.featVal)
+            .domain([d3.min(dataToAssign, d => d.featVal), d3.max(dataToAssign, d => d.featVal)])
+            .thresholds(bins);
 
-  handleImp() {
-    this.setState(state => ({
-      impToggle: !state.impToggle
-    }));
-  }
+        let processData = histGenerator(dataToAssign).map(d => orderBy(d, 'score', sortOrder));
 
-  handleAsc() {
-    this.setState(state => ({
-      ascToggle: !state.ascToggle
-    }));
-  }
+        processData.forEach((histBin, binNum) => {
+            histBin.forEach((item, idx) => {
+                item.x = binNum;
+                item.y = idx;
+            })
+        });
 
-  handleData(i) {
-    this.setState(state => ({
-      featNum: String(i)
-    }))
-  }
+        return processData.flat();
+    }, [ascToggle]);
 
-  getData() {
-    fetch('http://localhost:8888/'+this.state.featNum+'.json')
-      .then(response => response.json())
-      .then(data => this.setState(state => ({
-        data: this.assignCoords(data)
-      })));
-  }
+    useEffect(() => {
+        fetch('http://localhost:8888/' + featNum + '.json')
+            .then(response => response.json())
+            .then(fetchedData => setData(assignCoords(fetchedData)));
+    }, [featNum, assignCoords]);
 
-  assignCoords(data) {
-    const sortOrder = this.state.ascToggle ? 'asc' : 'desc';
-    const hist = histogram().value(d => d.featVal).thresholds(bins);
-    let processData = hist(data).map(d => orderBy(d,'score',sortOrder));
+    useEffect(() => {
+        setData(prevData => assignCoords(prevData));
+    }, [ascToggle, assignCoords]);
 
-    processData.forEach((histBin, binNum) => {
-      histBin.forEach((item, idx) => {
-        item.x = binNum;
-        item.y = idx;
-      })
-    });
-
-    return processData.flat();
-  }
-
-  componentDidMount() {
-    this.getData();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // conditional prevents infinite loop from render to cDU
-    if (prevState.featNum !== this.state.featNum) {
-      this.getData();
-    }
-    if (prevState.ascToggle !== this.state.ascToggle) {
-      this.setState(state => ({
-        data: this.assignCoords(this.state.data) //process w no re-fetch
-      }))
-    }
-  }
-
-  render() {
     const riskStyle = {
-      backgroundColor: this.state.riskToggle ? 'white' : 'hsl(0, 0%, 15%)',
-      color: this.state.riskToggle ? 'black' : 'hsl(0, 0%, 45%)',
+        backgroundColor: riskToggle ? 'white' : 'hsl(0, 0%, 15%)',
+        color: riskToggle ? 'black' : 'hsl(0, 0%, 45%)',
     };
     const impStyle = {
-      backgroundColor: this.state.impToggle ? 'white' : 'hsl(0, 0%, 15%)',
-      color: this.state.impToggle ? 'black' : 'hsl(0, 0%, 45%)',
+        backgroundColor: impToggle ? 'white' : 'hsl(0, 0%, 15%)',
+        color: impToggle ? 'black' : 'hsl(0, 0%, 45%)',
     };
     const ascStyle = {
-      backgroundColor: this.state.ascToggle ? 'white' : 'hsl(0, 0%, 15%)',
-      color: this.state.ascToggle ? 'black' : 'hsl(0, 0%, 45%)',
+        backgroundColor: ascToggle ? 'white' : 'hsl(0, 0%, 15%)',
+        color: ascToggle ? 'black' : 'hsl(0, 0%, 45%)',
     };
 
     return (
-      <div className='app'>
-        <div className='field'>
-          <Histogram
-            data={this.state.data}
-            riskToggle={this.state.riskToggle}
-            impToggle={this.state.impToggle}
-          />
+        <div className='app'>
+            <div className='field'>
+                <Histogram data={data} riskToggle={riskToggle} impToggle={impToggle} />
+            </div>
+            <div className='panel'>
+                <Gallery handleData={handleData} />
+                <div className='buttonStrip'>
+                    <button onClick={handleRisk} style={riskStyle}>RISK</button>
+                    <button onClick={handleImp} style={impStyle}>IMP</button>
+                    <button onClick={handleAsc} style={ascStyle}>ASC</button>
+                </div>
+            </div>
         </div>
-        <div className='panel'>
-          <Gallery
-            handleData={this.handleData}
-          />
-          <div className='buttonStrip'>
-            <button onClick={this.handleRisk} style={riskStyle}>RISK</button>
-            <button onClick={this.handleImp} style={impStyle}>IMP</button>
-            <button onClick={this.handleAsc} style={ascStyle}>ASC</button>
-          </div>
-        </div>
-      </div>
     );
-  }
 }
 
 export default App;

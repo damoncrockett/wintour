@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { select } from 'd3-selection';
+import React, { useState, useEffect, useRef } from 'react';
 import { min, max } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
@@ -9,153 +8,95 @@ const margin = {top: 40, right: 40, bottom: 40, left: 40};
 const baseWidth = 800;
 const tickPct = 0.2;
 
-class Histogram extends Component {
-  constructor(props) {
-    super(props);
-    this.drawHistogram = this.drawHistogram.bind(this);
-    this.setRectAttr = this.setRectAttr.bind(this);
-    this.drawAxisX = this.drawAxisX.bind(this);
-    this.drawAxisY = this.drawAxisY.bind(this);
-    this.svgNode = React.createRef();
-    this.state = {
-      rectSide: null,
-      rectPad: null,
-      svgH: null,
-      svgW: null,
-      histH: null,
-      histW: null,
-      maxY: null,
-      trueBins: null,
+const Histogram = ({ data, impToggle, riskToggle }) => {
+    const svgNode = useRef(null);
+
+    const [dimensions, setDimensions] = useState({
+        rectSide: null,
+        rectPad: null,
+        svgH: null,
+        svgW: null,
+        histH: null,
+        histW: null,
+        maxY: null,
+        trueBins: null
+    });
+
+    useEffect(() => {
+        setRectAttr();
+        drawHistogram();
+    }, [data, impToggle, riskToggle]); // Re-render if data or toggles change
+
+    const setRectAttr = () => {
+        const binLabels = data.map(d => d.x);
+        const binMin = min(binLabels);
+        const binMax = max(binLabels);
+        const binDiff = binMax - binMin;
+        const trueBins = binDiff + 1;
+        const rectSide = baseWidth / trueBins;
+        const rectPad = rectSide * 0.1;
+        const histW = binDiff * (rectSide + rectPad) + rectSide; // no outer pads
+        const maxY = max(data.map(d => d.y));
+        const histH = maxY * (rectSide + rectPad) + rectSide; // no outer pads
+
+        setDimensions({
+            rectSide,
+            rectPad,
+            svgW: histW + margin.left + margin.right,
+            svgH: histH + margin.top + margin.bottom,
+            histW,
+            histH,
+            maxY,
+            trueBins
+        });
     };
-  }
 
-  componentDidUpdate(prevProps, prevState) {
-    // conditional prevents infinite loop
-    if (prevProps.data !== this.props.data) {
-      this.setRectAttr();
-    }
-    // has to be outside conditional because buttons don't change props.data
-    this.drawHistogram();
-  }
+    const drawHistogram = () => {
+        // This will now be moved to JSX
+        window.scrollTo(0, dimensions.svgH);
+    };
 
-  setRectAttr() {
-    const binLabels = this.props.data.map(d => d.x);
-    const binMin = min(binLabels);
-    const binMax = max(binLabels);
-    const binDiff = binMax - binMin;
-    const trueBins = binDiff + 1;
-    const rectSide = baseWidth / trueBins;
-    const rectPad = rectSide * 0.1;
-    const histW = binDiff * (rectSide + rectPad) + rectSide; // no outer pads
-    const maxY = max(this.props.data.map(d => d.y));
-    const histH = maxY * (rectSide + rectPad) + rectSide; // no outer pads
+    const xScale = scaleLinear()
+        .domain([min(data.map(d => d.featVal)), max(data.map(d => d.featVal))])
+        .range([0, dimensions.histW]);
 
-    this.setState(state => ({
-      rectSide: rectSide,
-      rectPad: rectPad,
-      svgW: histW + margin.left + margin.right,
-      svgH: histH + margin.top + margin.bottom,
-      histW: histW,
-      histH: histH,
-      maxY: maxY,
-      trueBins: trueBins,
-    }));
-  }
+    const yScale = scaleLinear()
+        .domain([0, dimensions.maxY])
+        .range([dimensions.histH, 0]);
 
-  drawAxisX() {
-    const featVals = this.props.data.map(d => d.featVal);
-    const x = scaleLinear()
-                .domain([min(featVals), max(featVals)])
-                .range([0, this.state.histW]);
-    return axisBottom(x).ticks(Math.round(this.state.trueBins * tickPct));
-  }
-
-  drawAxisY() {
-    const y = scaleLinear()
-                .domain([0, this.state.maxY])
-                .range([this.state.histH, 0]);
-    return axisLeft(y).ticks(Math.round(this.state.maxY * tickPct));
-  }
-
-  drawHistogram() {
-    const svgNode = this.svgNode.current;
-    const axisDrop = this.state.histH + this.state.rectPad;
-
-    select(svgNode)
-      .selectAll('g.xAxis')
-      .data([0]) // bc enter selection, prevents appending new 'g' on re-render
-      .enter()
-      .append('g')
-      .attr('class', 'xAxis'); // purely semantic
-
-    select(svgNode)
-      .select('g.xAxis') // the g of class xAxis
-      .attr('transform', `translate(${margin.left},${axisDrop+margin.top})`)
-      .call(this.drawAxisX()); // re-draws on same g
-
-    select(svgNode)
-      .selectAll('g.yAxis')
-      .data([0]) // bc enter selection, prevents appending new 'g' on re-render
-      .enter()
-      .append('g')
-      .attr('class', 'yAxis'); // purely semantic
-
-    select(svgNode)
-      .select('g.yAxis') // the g of class yAxis
-      .attr('transform',
-            `translate(${margin.left - this.state.rectPad},${margin.top})`)
-      .call(this.drawAxisY()) // re-draws on same g
-      .call(g => g.select(".domain").remove()); // removes vertical axis line
-
-    select(svgNode)
-      .selectAll('g.plotCanvas')
-      .data([0]) // bc enter selection, prevents appending new 'g' on re-render
-      .enter()
-      .append('g')
-      .attr('class', 'plotCanvas') // purely semantic
-      .attr('transform', `translate(${margin.left},${margin.top})`);
-
-    // This selection is non-empty only the first time
-    select(svgNode)
-      .select('g.plotCanvas')
-      .selectAll('rect')
-      .data(this.props.data)
-      .enter()
-      .append('rect')
-      .attr('stroke', 'hsl(0, 0%, 15%)');
-
-    select(svgNode)
-      .select('g.plotCanvas')
-      .selectAll('rect')
-      .data(this.props.data)
-      .attr('width', this.state.rectSide)
-      .attr('height', this.state.rectSide)
-      .attr('rx', String(this.state.rectSide * .15))
-      .attr('ry', String(this.state.rectSide * .15))
-      .attr('x', d => d.x * (this.state.rectSide + this.state.rectPad))
-      .attr('y', d => (
-        this.state.histH -
-        d.y * (this.state.rectSide + this.state.rectPad) -
-        this.state.rectSide
-      ))
-      .attr('fill', d => (
-        togglesToFill(
-          this.props.impToggle ? d.imp : null,
-          this.props.riskToggle ? d.score : null
-        )
-      ))
-      .attr('title', d => d.featVal);
-
-      window.scrollTo( 0, this.state.svgH );
-    }
-
-  render() {
-    return <svg
-             ref={this.svgNode}
-             width={this.state.svgW}
-             height={this.state.svgH}
-           />;
-  }
+    return (
+        <svg ref={svgNode} width={dimensions.svgW} height={dimensions.svgH}>
+            <g transform={`translate(${margin.left},${margin.top})`}>
+                {data.map((d, i) => (
+                    <rect
+                        key={i}
+                        stroke="hsl(0, 0%, 15%)"
+                        width={dimensions.rectSide}
+                        height={dimensions.rectSide}
+                        rx={dimensions.rectSide * 0.15}
+                        ry={dimensions.rectSide * 0.15}
+                        x={d.x * (dimensions.rectSide + dimensions.rectPad)}
+                        y={dimensions.histH - d.y * (dimensions.rectSide + dimensions.rectPad) - dimensions.rectSide}
+                        fill={togglesToFill(impToggle ? d.imp : null, riskToggle ? d.score : null)}
+                        title={d.featVal}
+                    />
+                ))}
+                <g
+                    className="xAxis"
+                    transform={`translate(0,${dimensions.histH + dimensions.rectPad})`}
+                    ref={node => select(node).call(axisBottom(xScale).ticks(Math.round(dimensions.trueBins * tickPct)))}
+                />
+                <g
+                    className="yAxis"
+                    transform={`translate(${margin.left - dimensions.rectPad},0)`}
+                    ref={node => {
+                        const axis = axisLeft(yScale).ticks(Math.round(dimensions.maxY * tickPct));
+                        select(node).call(axis).call(g => g.select(".domain").remove());
+                    }}
+                />
+            </g>
+        </svg>
+    );
 }
 
 export default Histogram;
